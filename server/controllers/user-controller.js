@@ -1,5 +1,5 @@
 const User = require ('../models/users')
-
+const helper = require('../helpers/babu')
 
 module.exports = {
     getAllUser : (req, res)=>{
@@ -80,7 +80,31 @@ module.exports = {
         .catch(err =>{
             res.status(500).json(err)
         })
+    },
+
+    doLogin : (req, res)=>{
+        User.findOne({
+            email : req.body.email
+        })
+        .then(data =>{
+            let check = helper.decode(data.password, req.body.password)
+            if(check ){
+                let token = helper.jEncode({
+                    _id : data._id,
+                    name : data.email,
+                    role : data.role
+                })
+                res.status(200).json({
+                    message : `Berhasil Login`,
+                    token : token
+                })
+            }
+        })
+        .catch(err =>{
+            res.status(500).json(err)
+        })
     }
+
 
 
 

@@ -5,12 +5,14 @@ const app = express()
 const port = 2000
 const router = require('./routes')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 mongoose.connect(database, { useNewUrlParser :true})
 const db = mongoose.connection;
 db.on(`error`, console.error.bind(console, `connection error`))
 db.once (`open`, ()=> console.log(`Database is Connecting`))
 
+app.use(cors())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(router)
